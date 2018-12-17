@@ -1,9 +1,14 @@
 module.exports = {
     getRecommendedUniversityAndDepartment: async function(req, res) {
         var params = req.allParams();
-        var topsisTable = await TopsisTable.find();
-        console.log(topsisTable.length);
-        res.json({ topsisTable_size: topsisTable.length });
+        try {
+            var result = await TopsisTable.getRecommended(params);
+
+            res.json({ data: result });
+        } catch (error) {
+            console.log('error', error);
+            res.json({ status: 0, message: error.message });
+        }
         
     }
 }
