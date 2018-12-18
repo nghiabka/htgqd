@@ -39,7 +39,8 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
   'GET /index' : 'HomeController.index',
-  'GET /getRecommended': 'TopsisController.getRecommendedUniversityAndDepartment'
+  'GET /api/run-recommendation-system': 'TopsisController.getRecommendedUniversityAndDepartment',
+  'GET /api/all-options': 'TopsisController.getAllOptions'
 
   //  ╔═╗╔═╗╦  ╔═╗╔╗╔╔╦╗╔═╗╔═╗╦╔╗╔╔╦╗╔═╗
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
