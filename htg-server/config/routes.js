@@ -24,9 +24,9 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': {
-    view: 'pages/homepage'
-  },
+  // '/': {
+  //   view: 'pages/homepage'
+  // },
 
   /***************************************************************************
   *                                                                          *
@@ -38,7 +38,7 @@ module.exports.routes = {
   * not match any of those, it is matched against static assets.             *
   *                                                                          *
   ***************************************************************************/
-  'GET /index' : 'HomeController.index',
+  'GET /' : 'HomeController.index',
   'GET /api/run-recommendation-system': 'TopsisController.getRecommendedUniversityAndDepartment',
   'GET /api/all-options': 'TopsisController.getAllOptions'
 
