@@ -6,12 +6,12 @@ module.exports = {
     
     findAll: function() {
       return new Promise(function(resolve, reject) {
-        Group.query('select * from `group` order by code asc', function(error, data) {
+        Group.getDatastore().sendNativeQuery('select * from `group` order by code asc', function(error, data) {
           if (error) {
             return reject(error);
           } else {
             delete data.fields;
-            return resolve(data);
+            return resolve(data.rows);
           } 
         })
       })

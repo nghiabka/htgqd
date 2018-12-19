@@ -1,0 +1,199 @@
+<style type="text/css">
+    body {
+        background-color: white;
+        font-size: 14px;
+    }
+</style>
+<div class="container-fluid" style="margin-top: 70px;">
+    <div id="form_input">
+        <div class="row text-center" style="margin-top:20px">
+            <h1>Bạn vui lòng điền vào mẫu dưới đây để chúng tôi có thể tư vấn cho bạn chọn trường.</h1>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-md-6 col-md-offset-3">
+                <label>Điểm thi: </label>
+                <input id="department_entrance_score" type="number" class="form-control input-xs">
+            </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-md-6 col-md-offset-3">
+                <label>Trường Đại học / Cao đẳng yêu thích: </label>
+                <select id="university_favorite_score" data-placeholder="Trường Đại học/ Cao đẳng" style="width: 100%" class="select2 form-control">
+                    <option></option>
+                    <% 
+                    if(allOptions && allOptions.universities.length){
+                    
+                        for(var i=0;i < allOptions.universities.length; i++){
+                    %>
+                    <option value="<%= allOptions.universities[i].name %>"> <%= allOptions.universities[i].name %> </option>
+                    <%
+                        }
+                        }
+                    %>
+                </select>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-md-6 col-md-offset-3">
+                <label>Lĩnh vực yêu thích</label>
+                <select id="hobby_name" data-placeholder="Trường Đại học/ Cao đẳng" style="width: 100%" class="select2 form-control">
+                    <option></option>
+                    <% 
+                    if(allOptions && allOptions.hobbies.length){
+                    
+                        for(var i=0;i < allOptions.hobbies.length; i++){
+                    %>
+                    <option value="<%= allOptions.hobbies[i].name %>"> <%= allOptions.hobbies[i].name %> </option>
+                    <%
+                        }
+                        }
+                    %>
+                </select>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-md-3 col-md-offset-3">
+                <label>Khu vực: </label>
+                <select id="area" data-placeholder="Trường Đại học/ Cao đẳng" style="width: 100%" class="select2 form-control">
+                    <option value="1">Miền Bắc</option>
+                    <option value="2">Miền Trung</option>
+                    <option value="3">Miền Nam</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label>Khối thi</label>
+                <select id="group_code" data-placeholder="Trường Đại học/ Cao đẳng" style="width: 100%" class="select2 form-control">
+                    <option></option>
+                    <% 
+                    if(allOptions && allOptions.groups.length){
+                    
+                        for(var i=0;i < allOptions.groups.length; i++){
+                    %>
+                    <option value="<%= allOptions.groups[i].code %>"> <%= allOptions.groups[i].code %> </option>
+                    <%
+                    }
+                    }
+                    %>
+                </select>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-md-6 col-md-offset-3">
+                <label>Học phí: </label>
+                <select id="tuition" data-placeholder="Trường Đại học/ Cao đẳng" style="width: 100%" class="select2 form-control">
+                    <option value="1">Quan tâm đến học phí</option>
+                    <option value="0">Không quan tâm đến học phí</option>
+                </select>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-md-6 col-md-offset-3">
+                <label>Môn học: </label>
+                <select id="subject_name" data-placeholder="Trường Đại học/ Cao đẳng" style="width: 100%" class="select2 form-control">
+                    <option></option>
+                    <% 
+                    if(allOptions && allOptions.subjects.length){
+                    
+                        for(var i=0;i < allOptions.subjects.length; i++){
+                    %>
+                    <option value="<%= allOptions.subjects[i].id %>"> <%= allOptions.subjects[i].name %> </option>
+                    <%
+                        }
+                        }
+                    %>
+                </select>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-md-3 col-md-offset-6">
+                <div class="pull-right">
+                    <button type="button" onclick="submit()" class="btn btn-info">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="list_data_title" style="display: none" class="row">
+        <h1 class=" col-xs-3 col-xs-offset-3" >
+            Danh sách kêt quả:
+        </h1>
+    </div>
+    <div id="list_data" style="margin-bottom: 50px;">
+        
+    </div>
+</div>
+
+<script type="text/javascript">
+    var allOptions = <%- JSON.stringify(allOptions) %>
+    console.log('all options', allOptions);
+
+    function submit() {
+        $('#form_input').loading({
+            message: 'Đang xứ lý...'
+        });
+        var params = {
+            department_entrance_score: $('#department_entrance_score').val(),
+            university_favorite_score: $('#university_favorite_score').val(),
+            hobby_name               : $('#hobby_name').val(),
+            area                     : $('#area').val(),
+            group_code               : $('#group_code').val(),
+            tuition                  : $('#tuition').val(),
+            subject_name             : $('#subject_name').val()
+        }
+        var url = 'http://tuvantuyensinh.vn:1337/api/run-recommendation-system?';
+        for (var i in params) {
+            url += i + '=' + params[i] + '&';
+        }
+        $.get(url
+        , function(data, status) {
+            console.log('data', data);
+            $('#form_input').loading('stop');
+            return render(data.data);
+        })
+    }
+
+    function render(data) {
+        var html = '';
+        if (data.length) {
+            data.forEach(function(element) {
+            html += `
+                <div class="element_data_container" style="margin-bottom: 50px;">
+                    <div class="row">
+                        <label class="col-xs-1 col-xs-offset-3">Tên trường: </label>
+                        <div class="col-xs-5">${element.university_name}</div>
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-1 col-xs-offset-3">Tên ngành: </label>
+                        <div class="col-xs-5">${element.department_name} - Mã ${element.department_code}</div>
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-1 col-xs-offset-3">Điểm chuẩn: </label>
+                        <div class="col-xs-5">${element.department_entrance_score}</div>
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-1 col-xs-offset-3">Ghi chú: </label>
+                        <div class="col-xs-5">${element.note}</div>
+                    </div>
+                </div>
+                `;
+            })
+        } else {
+            html += `
+                <div class="element_data_container" style="margin-bottom: 50px;">
+                    <div class="row">
+                        <div class="col-xs-6 col-xs-offset-3">
+                            <p>Không có kết quả phù hợp</p>    
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        $('#list_data_title').show();
+        $('#list_data').empty();
+        $('#list_data').append(html);
+        var list_data_top = $('#list_data_title').offset().top;
+        $('html, body').animate({
+            scrollTop: list_data_top
+        }, 1000)
+    }
+</script>
