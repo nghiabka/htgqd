@@ -4,7 +4,7 @@ module.exports = {
         console.log('params', params);
         try {
             var result = await TopsisTable.getRecommended(params);
-
+            // console.log('result', result);
             res.json({ data: result });
         } catch (error) {
             console.log('error', error);

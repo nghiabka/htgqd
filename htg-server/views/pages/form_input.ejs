@@ -81,8 +81,8 @@
             <div class="col-md-6 col-md-offset-3">
                 <label>Học phí: </label>
                 <select id="tuition" data-placeholder="Trường Đại học/ Cao đẳng" style="width: 100%" class="select2 form-control">
-                    <option value="1">Quan tâm đến học phí</option>
-                    <option value="0">Không quan tâm đến học phí</option>
+                    <option value="yes">Quan tâm đến học phí</option>
+                    <option value="no">Không quan tâm đến học phí</option>
                 </select>
             </div>
         </div>
@@ -152,6 +152,11 @@
     }
 
     function render(data) {
+        var area_to_name = {
+            '1': 'Miền Bắc',
+            '2': 'Miền Trung',
+            '3': 'Miền Nam'
+        }
         var html = '';
         if (data.length) {
             data.forEach(function(element) {
@@ -172,6 +177,18 @@
                     <div class="row">
                         <label class="col-xs-1 col-xs-offset-3">Ghi chú: </label>
                         <div class="col-xs-5">${element.note}</div>
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-1 col-xs-offset-3">Khối thi: </label>
+                        <div class="col-xs-5">${element.group_code}</div>
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-1 col-xs-offset-3">Khu vực: </label>
+                        <div class="col-xs-5">${area_to_name[element.area]}</div>
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-1 col-xs-offset-3">Khu vực: </label>
+                        <div class="col-xs-5">${element.rank_value}</div>
                     </div>
                 </div>
                 `;

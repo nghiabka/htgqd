@@ -18,8 +18,11 @@ module.exports = {
     getRecommended: async (params) => {
      
         var localEnvVariableMetadata = Object.assign({}, envVariableMetadata);
-
-        var topsisTable = await TopsisTable.find();
+        var condition = {};
+        if (params.group_code) {
+            condition.group_code = params.group_code;
+        }
+        var topsisTable = await TopsisTable.find(condition);
         var topsis_table_size = topsisTable.length;
      
         for (let i in localEnvVariableMetadata) {
@@ -30,8 +33,23 @@ module.exports = {
                     else {
                         return Math.abs((parseFloat(t[i]) || 0) - (parseFloat(params[i]) || 0));}
                 } else {
-                    if (params[i] == t[i]) return 1
-                    else return 0;
+                    if (i == 'university_favorite_score') {
+                        if (params[i]) {
+                            return params[i] == t.university_name ? 1 : 0; 
+                        } else {
+                            t[i];
+                        }
+                    } else if (i == 'tuition') {
+                        
+                        if (params[i] == 'yes') {
+                            return t[i];
+                        } else {
+                            return 0;
+                        }
+                    } else {
+                        if (params[i] == t[i]) return 1
+                        else return 0;
+                    }
                 }
                 
             });
@@ -53,7 +71,8 @@ module.exports = {
                 localEnvVariableMetadata[i].bestValue = _.min(localEnvVariableMetadata[i].data);
             }
         }
-
+        // console.log(topsisTable);
+        // console.log(localEnvVariableMetadata);
         var tmp_s_plus = [];
 
         for (let i = 0; i < topsis_table_size; i ++) {
@@ -79,7 +98,7 @@ module.exports = {
 
         var ranks = [];
         for (let i = 0; i < topsis_table_size; i ++) {
-            ranks[i] = tmp_s_sub[i] + tmp_s_plus[i] ? tmp_s_sub[i] / ( tmp_s_sub[i] + tmp_s_plus[i] ) : 0;
+            ranks[i] = tmp_s_sub[i] + tmp_s_plus[i] ? tmp_s_sub[i] / ( tmp_s_sub[i] + tmp_s_plus[i] ) : 1;
         }
                 
         topsisTable = _.map(topsisTable, (e, index) => {
@@ -88,8 +107,14 @@ module.exports = {
         })
      
         topsisTable = _.sortBy(topsisTable, e => - e.rank_value);
+        topsisTable = _.groupBy(topsisTable, e => {
+            return e.university_name + e.department_name + e.group_code;
+        })
+        topsisTable = _.map(topsisTable, e => {
+            return e[0];
+        })
 
-        return topsisTable.length < 10 ? topsisTable : topsisTable.slice(0, 10);
+        return topsisTable.length < 100 ? topsisTable : topsisTable.slice(0, 100);
     }
 };
   
